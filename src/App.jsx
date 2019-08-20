@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import axios from "axios";
 import "./App.css";
 import User from "./components/users/User";
+import GithubState from "./context/github/GithubState";
 
 const App = () => {
   const [users, setUsers] = useState([]);
@@ -17,24 +18,24 @@ const App = () => {
   const [alert, setAlert] = useState(null);
   const [repos, setRepos] = useState([]);
 
-  const searchUsers = async user => {
-    try {
-      setLoading(true);
-      const {
-        data: { items }
-      } = await axios.get(`https://api.github.com/search/users?q=${user}`, {
-        params: {
-          client_id: process.env.GITHUB_CLIENT_ID,
-          client_secret: process.env.GITHUB_CLIENT_SECRET
-        }
-      });
-      setUsers(items);
-    } catch (error) {
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const searchUsers = async user => {
+  //   try {
+  //     setLoading(true);
+  //     const {
+  //       data: { items }
+  //     } = await axios.get(`https://api.github.com/search/users?q=${user}`, {
+  //       params: {
+  //         client_id: process.env.GITHUB_CLIENT_ID,
+  //         client_secret: process.env.GITHUB_CLIENT_SECRET
+  //       }
+  //     });
+  //     setUsers(items);
+  //   } catch (error) {
+  //     setError(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const getUser = async username => {
     try {
@@ -89,46 +90,47 @@ const App = () => {
   };
 
   return (
-    <Router>
-      <div className='App'>
-        <Nav />
-        <div className='container'>
-          <Alert alert={alert} />
-          <Switch>
-            <Route
-              exact
-              path='/'
-              render={props => (
-                <>
-                  <Search
-                    searchUsers={searchUsers}
-                    clearUser={clearUser}
-                    showClear={users.length > 0 ? true : false}
-                    setSearchAlert={setSearchAlert}
+    <GithubState>
+      <Router>
+        <div className='App'>
+          <Nav />
+          <div className='container'>
+            <Alert alert={alert} />
+            <Switch>
+              <Route
+                exact
+                path='/'
+                render={props => (
+                  <>
+                    <Search
+                      clearUser={clearUser}
+                      showClear={users.length > 0 ? true : false}
+                      setSearchAlert={setSearchAlert}
+                    />
+                    <Users users={users} loading={loading} error={error} />
+                  </>
+                )}
+              />
+              <Route exact path='/about' component={About} />
+              <Route
+                exact
+                path='/:login'
+                render={props => (
+                  <User
+                    {...props}
+                    getUser={getUser}
+                    getUserRepos={getUserRepos}
+                    user={user}
+                    loading={loading}
+                    repos={repos}
                   />
-                  <Users users={users} loading={loading} error={error} />
-                </>
-              )}
-            />
-            <Route exact path='/about' component={About} />
-            <Route
-              exact
-              path='/:login'
-              render={props => (
-                <User
-                  {...props}
-                  getUser={getUser}
-                  getUserRepos={getUserRepos}
-                  user={user}
-                  loading={loading}
-                  repos={repos}
-                />
-              )}
-            />
-          </Switch>
+                )}
+              />
+            </Switch>
+          </div>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </GithubState>
   );
 };
 
