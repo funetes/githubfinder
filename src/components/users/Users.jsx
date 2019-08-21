@@ -3,7 +3,8 @@ import UserItem from "./UserItem";
 import GithubContext from "../../context/github/GithubContext";
 import Spinner from "../layout/Spinner";
 import Message from "../layout/Message";
-const User = () => {
+
+export default () => {
   const githubContext = useContext(GithubContext);
   const { users, loading, error } = githubContext;
   return (
@@ -27,5 +28,3 @@ const userStyle = {
   gridTemplateColumns: "repeat(3,1fr)",
   gridGap: "1rem"
 };
-
-export default User;

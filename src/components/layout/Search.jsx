@@ -1,9 +1,12 @@
 import React, { useState, useContext } from "react";
-import PropTypes from "prop-types";
 import GithubContext from "../../context/github/GithubContext";
-const Search = ({ setSearchAlert }) => {
+import AlertContext from "../../context/alert/AlertContext";
+
+export default () => {
   const githubContext = useContext(GithubContext);
-  const { clearUser, users } = githubContext;
+  const alertContext = useContext(AlertContext);
+  const { clearUser, users, searchUsers } = githubContext;
+  const { setSearchAlert } = alertContext;
   const [value, setValue] = useState("funetes");
   const onChange = e => {
     const {
@@ -16,7 +19,7 @@ const Search = ({ setSearchAlert }) => {
     if (value === "") {
       setSearchAlert("검색어를 입력해주세요.", "light");
     } else {
-      githubContext.searchUsers(value);
+      searchUsers(value);
       setValue("");
     }
   };
@@ -37,12 +40,3 @@ const Search = ({ setSearchAlert }) => {
     </form>
   );
 };
-
-Search.propTypes = {
-  // searchUsers: PropTypes.func.isRequired,
-  // clearUser: PropTypes.func.isRequired,
-  // showClear: PropTypes.bool.isRequired,
-  setSearchAlert: PropTypes.func.isRequired
-};
-
-export default Search;
