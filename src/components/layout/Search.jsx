@@ -1,8 +1,9 @@
 import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
 import GithubContext from "../../context/github/GithubContext";
-const Search = ({ clearUser, showClear, setSearchAlert }) => {
+const Search = ({ setSearchAlert }) => {
   const githubContext = useContext(GithubContext);
+  const { clearUser, users } = githubContext;
   const [value, setValue] = useState("funetes");
   const onChange = e => {
     const {
@@ -16,7 +17,6 @@ const Search = ({ clearUser, showClear, setSearchAlert }) => {
       setSearchAlert("검색어를 입력해주세요.", "light");
     } else {
       githubContext.searchUsers(value);
-      // searchUsers(value);
       setValue("");
     }
   };
@@ -29,7 +29,7 @@ const Search = ({ clearUser, showClear, setSearchAlert }) => {
         placeholder='search'
       />
       <input type='submit' value='search' className='btn btn-dark btn-block' />
-      {showClear && (
+      {users.length > 0 && (
         <button className='btn btn-light btn-block' onClick={clearUser}>
           Clear
         </button>
@@ -40,8 +40,8 @@ const Search = ({ clearUser, showClear, setSearchAlert }) => {
 
 Search.propTypes = {
   // searchUsers: PropTypes.func.isRequired,
-  clearUser: PropTypes.func.isRequired,
-  showClear: PropTypes.bool.isRequired,
+  // clearUser: PropTypes.func.isRequired,
+  // showClear: PropTypes.bool.isRequired,
   setSearchAlert: PropTypes.func.isRequired
 };
 

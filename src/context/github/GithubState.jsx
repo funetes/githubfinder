@@ -107,14 +107,14 @@ const GithubState = ({ children }) => {
     <GithubContext.Provider
       value={{
         users: state.users,
-        // user: state.user,
-        // repos: state.repos,
+        user: state.user,
+        repos: state.repos,
         loading: state.loading,
         error: state.error,
-        searchUsers
-        // clearUser,
-        // getUser,
-        // getUserRepos
+        searchUsers,
+        clearUser,
+        getUser,
+        getUserRepos
       }}>
       {" "}
       {children}{" "}
